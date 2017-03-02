@@ -1,5 +1,5 @@
-from scrapy import *
 import scrapy as lol
+from firstCrawler.items import TripAdvisorItems
 
 class TripAdvisor(lol.Spider):
 #Defining Name of Spider
@@ -40,13 +40,17 @@ class TripAdvisor(lol.Spider):
         name=response.xpath('//div[@class="mapContainer"]/@data-name').extract_first()
         ratings = response.xpath('//img[@property="ratingValue"]/@content').extract_first()
         latitude = response.xpath('//div[@class="mapContainer"]/@data-lng').extract_first()
-        longtitude = response.xpath('//div[@class="mapContainer"]/@data-locid').extract_first()
+        longitude = response.xpath('//div[@class="mapContainer"]/@data-locid').extract_first()
         url=response.url
 
-#Yield all output so that it can be later filled into output stream
-        yield {"Name":name,
-               "Ratings":ratings,
-               "Latitude":latitude,
-               "Longtitude":longtitude,
-               "url":url
-               }
+        #Store these items into Items Class
+        item=TripAdvisorItems()
+
+        item['name']=name
+        item['rating'] = ratings
+        item['latitude'] = latitude
+        item['longitude'] = longitude
+        item['url'] = url
+
+        #Yield all output so that it can be later filled into output stream
+        yield item
